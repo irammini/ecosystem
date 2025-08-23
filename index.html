@@ -20,9 +20,12 @@
     <div class="container mx-auto px-4 py-8 relative z-10">
         
     <!-- Search Bar -->
-    <div class="mb-6">
-        <input type="text" id="search-input" class="w-full p-3 rounded-full border border-slate-700 bg-slate-800/80 text-white focus:outline-none focus:border-indigo-500" placeholder="Tìm kiếm bot...">
-        <button id="search-button" class="hidden">Tìm kiếm</button>
+    <div class="mb-6 flex gap-3 items-center">
+        <input type="text" id="search-input" class="flex-1 p-3 rounded-full border border-slate-700 bg-slate-800/80 text-white focus:outline-none focus:border-indigo-500" placeholder="Tìm kiếm bot..." aria-label="Search bots">
+        <button id="search-input-clear" class="hidden px-2 py-1 rounded-full bg-slate-700 hover:bg-slate-600 text-white transition" title="Clear input">✖</button>
+        <button id="search-button" class="px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition" title="Tìm kiếm">
+            🔍 Tìm
+        </button>
     </div>
 
     <header class="text-center mb-8 relative">
@@ -138,7 +141,7 @@
             <div class="space-y-2">
                 <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-2" data-translate-key="theme_settings_title">Cài đặt Giao diện</h3>
                 <button data-theme="aurora" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
-                    <span>✨ Aurora (Mặc định)</span>
+                    <span>✨ Aurora (Default)</span>
                     <span class="check-icon hidden">✓</span>
                 </button>
                 <button data-theme="classic" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
@@ -146,7 +149,7 @@
                     <span class="check-icon hidden">✓</span>
                 </button>
                 <button data-theme="classic-black" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
-                    <span>🌑 Classic - đen</span>
+                    <span>🌑 Classic - Black</span>
                     <span class="check-icon hidden">✓</span>
                 </button>
                 <button data-theme="cyberpunk" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">

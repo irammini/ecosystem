@@ -219,3 +219,46 @@ html[data-theme="classic"] .card-glow-effect:hover {
     color: var(--text-secondary);
     margin-bottom: 5px;
 }
+
+.search-highlight, mark.search-highlight {
+    background-color: rgba(99, 102, 241, 0.18); /* subtle indigo */
+    padding: 0 .18rem;
+    border-radius: 4px;
+    color: inherit;
+}
+
+.search-clear-btn, #search-input-clear {
+    min-width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 0.95rem;
+}
+
+.role-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* WebKit/Blink fallback */
+    line-clamp: 2; /* Standard property for newer/compatible UA */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2rem;
+    max-height: calc(1.2rem * 2); /* ensure consistent height */
+}
+
+.single-line-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.tech-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: -2px;
+    margin-right: 6px;
+}

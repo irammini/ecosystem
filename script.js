@@ -5,6 +5,7 @@ const appState = {
     activeTab: 'overview',
     activeTheme: 'aurora',
     charts: {},
+    searchTerm: '' // added: current search term (lowercase)
 };
 
 // --- CORE LOGIC ---
@@ -150,6 +151,40 @@ function filterAndRenderCards() {
     renderBotCards(filteredBots);
 }
 
+function escapeHtml(str = '') {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// Helper: escape for RegExp
+function escapeRegExp(s = '') {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Highlight occurrences of term in plain text safely, return HTML
+function highlightText(text = '', term = '') {
+    if (!term) return escapeHtml(text);
+    const raw = String(text);
+    const re = new RegExp(escapeRegExp(term), 'gi');
+    let result = '';
+    let lastIndex = 0;
+    let match;
+    while ((match = re.exec(raw)) !== null) {
+        result += escapeHtml(raw.slice(lastIndex, match.index));
+        result += `<mark class="search-highlight">${escapeHtml(match[0])}</mark>`;
+        lastIndex = re.lastIndex;
+        // prevent infinite loops for zero-length matches
+        if (re.lastIndex === match.index) re.lastIndex++;
+    }
+    result += escapeHtml(raw.slice(lastIndex));
+    return result;
+}
+
+// Replace renderBotCards to inject highlighted HTML and language icons where appropriate
 function renderBotCards(bots) {
     const grid = document.getElementById('bot-grid');
     if (!grid) return;
@@ -167,41 +202,60 @@ function renderBotCards(bots) {
             ramDisplay = `${(bot.config.ram / 1024).toFixed(1).replace('.0', '')} GB`;
         }
         
-        const roleText = (getTranslation(bot.translation_keys.role)).substring(0, 100) + '...';
+        const term = appState.searchTerm || '';
+        const nameHtml = highlightText(bot.name, term);
+        const libHtml = highlightText(bot.tech.lib || '', term);
+        const langHtml = highlightText(bot.tech.lang || '', term);
+        const roleFull = getTranslation(bot.translation_keys.role) || '';
+        const roleHtml = highlightText(roleFull, term);
+
+        // Build language icon HTML
+        let techIconHtml = '';
+        const lang = (bot.tech.lang || '').toLowerCase();
+        if (lang.includes('python')) {
+            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="tech-icon">`;
+        } else if (lang.includes('javascript')) {
+            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="tech-icon">`;
+        } else if (lang.includes('java')) {
+            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" class="tech-icon">`;
+        } else if (lang.includes('rust')) {
+            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" alt="Rust" class="tech-icon">`;
+        } else if (lang.includes('lua')) {
+            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-plain.svg" alt="Lua" class="tech-icon">`;
+        } else if (lang.includes('bun')) {
+            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg" alt="Bun" class="tech-icon">`;
+        } else if (lang === 'scnx') {
+            techIconHtml = `🤖`;
+        } else if (lang === 'kite') {
+            techIconHtml = `🪁`;
+        }
 
         card.innerHTML = `
             <div class="card-content p-5 flex flex-col h-full">
                 <div class="flex-grow">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 rounded-full ${bot.isMain ? 'bg-indigo-600' : 'bg-slate-700'} flex items-center justify-center mr-4 flex-shrink-0">
-                            <span class="text-xl font-bold text-white">${bot.name.charAt(0)}</span>
+                            <span class="text-xl font-bold text-white">${escapeHtml(bot.name.charAt(0))}</span>
                         </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-[var(--text-primary)]">${bot.name}</h3>
-                            <p class="text-sm text-[var(--text-secondary)]">${bot.tech.lib}</p>
+                        <div class="min-w-0">
+                            <h3 class="text-lg font-bold text-[var(--text-primary)]">${nameHtml}</h3>
+                            <p class="text-sm text-[var(--text-secondary)] single-line-ellipsis">${libHtml}</p>
                         </div>
                     </div>
-                    <p class="text-sm text-[var(--text-secondary)] mb-4 h-12">${roleText}</p>
+                    <p class="text-sm text-[var(--text-secondary)] mb-4 role-preview">${roleHtml}</p>
                     <div class="flex items-center justify-between text-xs text-[var(--text-secondary)] mb-4">
                         <div class="flex items-center gap-2 px-2 py-1 bg-black/20 rounded-full">
                             <span class="w-2 h-2 rounded-full ${statusInfo.class}"></span>
                             <span>${statusInfo.text}</span>
                         </div>
                         <span class="font-mono bg-black/20 px-2 py-1 rounded-full flex items-center gap-1">
-                            ${bot.tech.lang === 'Python' ? '<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="w-4 h-4" alt="Python">' : ''}
-                            ${bot.tech.lang === 'JavaScript' ? '<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-4 h-4" alt="JavaScript">' : ''}
-                            ${bot.tech.lang === 'Java' ? '<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" class="w-4 h-4" alt="Java">' : ''}
-                            ${bot.tech.lang === 'Rust' ? '<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg" class="w-4 h-4" alt="Rust">' : ''}
-                            ${bot.tech.lang === 'Lua' ? '<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-original.svg" class="w-4 h-4" alt="Lua">' : ''}
-                            ${bot.tech.lang === 'Bun' ? '<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bun/bun-original.svg" class="w-4 h-4" alt="Bun">' : ''}
-                            ${(bot.tech.lang === 'SCNX' || bot.tech.lang === 'Kite') ? '🤖' : ''}
-                            ${bot.tech.lang}
+                            ${techIconHtml}${langHtml === highlightText(bot.tech.lang, '') ? escapeHtml(bot.tech.lang) : langHtml}
                         </span>
                     </div>
                     <div class="flex justify-around text-center text-xs bg-black/10 p-2 rounded-lg border border-[var(--border-color)]">
-                        <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><div><div class="font-bold text-[var(--text-primary)]">${ramDisplay}</div><div class="text-[var(--text-secondary)]">${getTranslation('card_ram')}</div></div></div>
-                        <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-1.414-1.414M19.778 19.778l-1.414-1.414M18.364 5.636l-1.414 1.414M4.222 19.778l1.414-1.414M12 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg><div><div class="font-bold text-[var(--text-primary)]">${bot.config.cpu || 'N/A'}</div><div class="text-[var(--text-secondary)]">${getTranslation('card_cpu')}</div></div></div>
-                        <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m1 5a9 9 0 01-18 0" /></svg><div><div class="font-bold text-[var(--text-primary)]">${bot.config.disk || 'N/A'}</div><div class="text-[var(--text-secondary)]">${getTranslation('card_disk')}</div></div></div>
+                        <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><div><div class="font-bold text-[var(--text-primary)]">${escapeHtml(ramDisplay)}</div><div class="text-[var(--text-secondary)]">${getTranslation('card_ram')}</div></div></div>
+                        <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-1.414-1.414M19.778 19.778l-1.414-1.414M18.364 5.636l-1.414 1.414M4.222 19.778l1.414-1.414M12 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg><div><div class="font-bold text-[var(--text-primary)]">${escapeHtml(bot.config.cpu || 'N/A')}</div><div class="text-[var(--text-secondary)]">${getTranslation('card_cpu')}</div></div></div>
+                        <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m1 5a9 9 0 01-18 0" /></svg><div><div class="font-bold text-[var(--text-primary)]">${escapeHtml(bot.config.disk || 'N/A')}</div><div class="text-[var(--text-secondary)]">${getTranslation('card_disk')}</div></div></div>
                     </div>
                 </div>
                 <button data-id="${bot.id}" class="view-details-btn mt-5 w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200">${getTranslation('view_details')}</button>
@@ -296,6 +350,7 @@ function setupEventListeners() {
             const button = e.target.closest('button.filter-btn');
             if (button) {
                 appState.currentFilter = button.dataset.filter;
+                localStorage.setItem('filter', appState.currentFilter); // persist filter
                 renderFilters();
                 filterAndRenderCards();
             }
@@ -402,44 +457,6 @@ function showDevInfoModal() {
     showModal('modal');
 }
 
-function showBotModal(botId) {
-    const bot = botsData.find(b => b.id === botId);
-    if (!bot) return;
-
-    const modalContent = document.getElementById('modal-content');
-    if (!modalContent) return;
-    const statusInfo = getStatusInfo(bot.status);
-    const finalStatus = bot.status.key === 'joke' ? statusInfo.text : `${bot.status.version || ''} (${statusInfo.text})`.trim();
-
-    modalContent.innerHTML = `
-        <div class="flex items-start mb-6">
-            <div class="w-16 h-16 rounded-full ${bot.isMain ? 'bg-indigo-600' : 'bg-slate-700'} flex items-center justify-center mr-5 flex-shrink-0">
-                <span class="text-3xl font-bold text-white">${bot.name.charAt(0)}</span>
-            </div>
-            <div>
-                <h2 class="text-2xl md:text-3xl font-bold text-[var(--text-primary)]">${bot.name}</h2>
-                <p class="text-md text-[var(--text-secondary)]">${bot.tech.lang} - ${bot.tech.lib}</p>
-            </div>
-        </div>
-        <div class="space-y-6 text-[var(--text-secondary)]">
-            <div><h4 class="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2"><span>💼</span><span>${getTranslation('modal_role')}</span></h4><p class="text-sm leading-relaxed border-l-2 border-white/20 pl-4">${getTranslation(bot.translation_keys.role)}</p></div>
-            <div><h4 class="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2"><span>📜</span><span>${getTranslation('modal_history')}</span></h4><p class="text-sm leading-relaxed border-l-2 border-white/20 pl-4">${getTranslation(bot.translation_keys.history)}</p></div>
-            ${bot.translation_keys.funFact ? `<div><h4 class="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2"><span>✨</span><span>${getTranslation('modal_fun_fact')}</span></h4><p class="text-sm leading-relaxed bg-amber-500/10 border-l-2 border-amber-500 p-3 rounded-r-lg">${getTranslation(bot.translation_keys.funFact)}</p></div>` : ''}
-            ${bot.translation_keys.roadmap ? `<div><h4 class="font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2"><span>🗺️</span><span>${getTranslation('modal_roadmap')}</span></h4><p class="text-sm leading-relaxed border-l-2 border-white/20 pl-4">${getTranslation(bot.translation_keys.roadmap)}</p></div>` : ''}
-            
-            <div class="border-t border-[var(--border-color)] pt-5">
-                <h4 class="font-semibold text-[var(--text-primary)] mb-3">${getTranslation('modal_tech_specs')}</h4>
-                <dl class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 text-sm">
-                    <div class="flex flex-col"><dt class="text-[var(--text-secondary)]">${getTranslation('modal_status')}</dt><dd class="font-medium text-[var(--text-primary)]">${finalStatus}</dd></div>
-                    <div class="flex flex-col"><dt class="text-[var(--text-secondary)]">${getTranslation('modal_host')}</dt><dd class="font-medium text-[var(--text-primary)]">${bot.tech.host}</dd></div>
-                    <div class="flex flex-col"><dt class="text-[var(--text-secondary)]">${getTranslation('modal_db')}</dt><dd class="font-medium text-[var(--text-primary)]">${bot.tech.db || 'N/A'}</dd></div>
-                </dl>
-            </div>
-        </div>
-    `;
-    
-    showModal('modal');
-}
 
 function showSettingsModal() {
     renderLangSwitcher();
@@ -481,7 +498,32 @@ function renderUpdatesTimeline() {
 function showModal(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
-    modal.style.display = 'block';
+
+    // Create backdrop if missing
+    let backdrop = document.getElementById('modal-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'modal-backdrop';
+        Object.assign(backdrop.style, {
+            position: 'fixed',
+            inset: '0',
+            background: 'rgba(0,0,0,0.45)',
+            backdropFilter: 'blur(6px) saturate(120%)',
+            WebkitBackdropFilter: 'blur(6px) saturate(120%)',
+            zIndex: '60',
+            opacity: '0',
+            transition: 'opacity 180ms ease',
+        });
+        document.body.appendChild(backdrop);
+        // force reflow then fade in
+        void backdrop.offsetWidth;
+        backdrop.style.opacity = '1';
+    } else {
+        backdrop.style.opacity = '1';
+    }
+
+    // Ensure modal is on top of backdrop
+    Object.assign(modal.style, { display: 'block', zIndex: '70' });
     document.body.style.overflow = 'hidden';
     
     setTimeout(() => {
@@ -489,6 +531,7 @@ function showModal(modalId) {
     }, 10);
 }
 
+// --- CHANGED: hideAllModals - remove/hide backdrop smoothly ---
 function hideAllModals() {
     const modals = document.querySelectorAll('.modal');
     
@@ -498,12 +541,22 @@ function hideAllModals() {
     });
     
     document.body.style.overflow = '';
+
+    // fade out backdrop then remove
+    const backdrop = document.getElementById('modal-backdrop');
+    if (backdrop) {
+        backdrop.style.opacity = '0';
+    }
     
     setTimeout(() => {
         modals.forEach(modal => {
             modal.style.display = 'none';
             modal.classList.remove('fade-out');
+            modal.style.zIndex = '';
         });
+        if (backdrop && backdrop.parentNode) {
+            backdrop.parentNode.removeChild(backdrop);
+        }
     }, 300);
 }
 
@@ -532,64 +585,107 @@ function updateThemeModalSelection() {
 // --- SEARCH FUNCTIONALITY ---
 function setupSearchFunctionality() {
     const searchInput = document.getElementById('search-input');
-    if (!searchInput) return;
+    const searchButton = document.getElementById('search-button');
+    if (!searchInput || !searchButton) return;
 
-    // Add event listeners for search
-    searchInput.addEventListener('input', handleSearch);
+    // Debounce search to improve performance
+    let searchTimeout;
+    const debounceSearch = (callback, delay = 300) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(callback, delay);
+    };
+
+    // Trigger search on button click or Enter key
+    searchButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleSearch();
+    });
+
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             handleSearch();
         }
     });
 
-    // Add placeholder translation
+    // Real-time search with debouncing
+    searchInput.addEventListener('input', () => {
+        const clearBtn = document.getElementById('search-input-clear');
+        if (clearBtn) {
+            clearBtn.classList.toggle('hidden', searchInput.value.trim() === '');
+        }
+
+        // Debounce the search to avoid excessive rendering
+        debounceSearch(() => {
+            if (searchInput.value.trim() !== '') {
+                handleSearch();
+            }
+        }, 200);
+    });
+
+    // Set initial placeholder translation
     searchInput.placeholder = getTranslation('search_placeholder');
 }
 
 function handleSearch() {
     const searchInput = document.getElementById('search-input');
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    
-    if (searchTerm === '') {
-        // If search is empty, revert to current filter
+    if (!searchInput) return;
+    const raw = searchInput.value.trim();
+    const searchTermLower = raw.toLowerCase();
+    appState.searchTerm = searchTermLower;
+
+    if (searchTermLower === '') {
+        // Clear search state and show filtered list
         filterAndRenderCards();
+        // reset directory title
+        const directoryTitle = document.querySelector('#bot-directory h2');
+        if (directoryTitle) directoryTitle.innerHTML = getTranslation('directory_title');
         return;
     }
 
     // Perform search across all bots
-    const searchResults = searchBots(searchTerm);
-    renderSearchResults(searchResults, searchTerm);
+    const searchResults = searchBots(searchTermLower);
+    renderSearchResults(searchResults, raw);
+
+    // Scroll to directory
+    document.getElementById('bot-directory')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function searchBots(searchTerm) {
-    return botsData.filter(bot => {
+    const results = botsData.filter(bot => {
         // Search in bot name
         if (bot.name.toLowerCase().includes(searchTerm)) return true;
 
         // Search in programming language
-        if (bot.tech.lang.toLowerCase().includes(searchTerm)) return true;
+        if ((bot.tech.lang || '').toLowerCase().includes(searchTerm)) return true;
 
         // Search in library/framework
-        if (bot.tech.lib.toLowerCase().includes(searchTerm)) return true;
+        if ((bot.tech.lib || '').toLowerCase().includes(searchTerm)) return true;
 
         // Search in status
-        if (bot.status.key.toLowerCase().includes(searchTerm)) return true;
+        if ((bot.status.key || '').toLowerCase().includes(searchTerm)) return true;
 
         // Search in translated role description
-        const roleText = getTranslation(bot.translation_keys.role).toLowerCase();
+        const roleText = (getTranslation(bot.translation_keys.role) || '').toLowerCase();
         if (roleText.includes(searchTerm)) return true;
 
         // Search in translated history description
-        const historyText = getTranslation(bot.translation_keys.history).toLowerCase();
+        const historyText = (getTranslation(bot.translation_keys.history) || '').toLowerCase();
         if (historyText.includes(searchTerm)) return true;
 
         return false;
     });
+    return results;
 }
 
 function renderSearchResults(bots, searchTerm) {
     const grid = document.getElementById('bot-grid');
     if (!grid) return;
+
+    // Build title with clear button
+    const directoryTitle = document.querySelector('#bot-directory h2');
+    const escapedTerm = escapeHtml(searchTerm);
+    const clearButtonHtml = `<button id="clear-search" class="ml-3 px-2 py-0.5 text-sm rounded-full bg-slate-700 hover:bg-slate-600 transition">✖</button>`;
 
     if (bots.length === 0) {
         // Show no results message
@@ -597,19 +693,36 @@ function renderSearchResults(bots, searchTerm) {
             <div class="col-span-full text-center py-12">
                 <div class="text-6xl mb-4">🔍</div>
                 <h3 class="text-xl font-bold text-[var(--text-primary)] mb-2">${getTranslation('search_no_results')}</h3>
-                <p class="text-[var(--text-secondary)]">${getTranslation('search_no_results_desc').replace('{term}', `<span class="text-indigo-400">"${searchTerm}"</span>`)}</p>
+                <p class="text-[var(--text-secondary)]">${getTranslation('search_no_results_desc').replace('{term}', `<span class="text-indigo-400">"${escapedTerm}"</span>`)}</p>
             </div>
         `;
+        // update directory title + clear button
+        if (directoryTitle) directoryTitle.innerHTML = `${getTranslation('search_results')} <span class="text-indigo-400">"${escapedTerm}"</span> <span class="text-sm text-[var(--text-secondary)]">(0 ${getTranslation('search_results_plural')})</span> ${clearButtonHtml}`;
+        // attach clear handler
+        setTimeout(() => {
+            document.getElementById('clear-search')?.addEventListener('click', () => {
+                document.getElementById('search-input').value = '';
+                appState.searchTerm = '';
+                if (directoryTitle) directoryTitle.innerHTML = getTranslation('directory_title');
+                filterAndRenderCards();
+            });
+        }, 20);
         return;
     }
 
-    // Render the search results
+    // Render the search results (renderBotCards will use appState.searchTerm for highlighting)
     renderBotCards(bots);
 
-    // Update the directory title to show search results
-    const directoryTitle = document.querySelector('#bot-directory h2');
+    // Update the directory title to show search results + clear button
     if (directoryTitle) {
-        directoryTitle.innerHTML = `${getTranslation('search_results')} <span class="text-indigo-400">"${searchTerm}"</span> <span class="text-sm text-[var(--text-secondary)]">(${bots.length} ${bots.length === 1 ? getTranslation('search_result') : getTranslation('search_results_plural')})</span>`;
+        directoryTitle.innerHTML = `${getTranslation('search_results')} <span class="text-indigo-400">"${escapedTerm}"</span> <span class="text-sm text-[var(--text-secondary)]">(${bots.length} ${bots.length === 1 ? getTranslation('search_result') : getTranslation('search_results_plural')})</span> ${clearButtonHtml}`;
+        // attach clear handler
+        document.getElementById('clear-search')?.addEventListener('click', () => {
+            document.getElementById('search-input').value = '';
+            appState.searchTerm = '';
+            directoryTitle.innerHTML = getTranslation('directory_title');
+            filterAndRenderCards();
+        });
     }
 }
 
@@ -630,6 +743,7 @@ function filterAndRenderCards() {
     if (searchInput) {
         searchInput.value = '';
     }
+    appState.searchTerm = ''; // clear search term state
     
     const directoryTitle = document.querySelector('#bot-directory h2');
     if (directoryTitle) {
@@ -637,4 +751,88 @@ function filterAndRenderCards() {
     }
     
     renderBotCards(filteredBots);
+}
+
+// --- CHANGED: add showBotModal to render bot details in the modal (uses highlightText/getTranslation) ---
+function showBotModal(botId) {
+    const bot = botsData.find(b => b.id === botId);
+    if (!bot) return;
+
+    const modalContent = document.getElementById('modal-content');
+    if (!modalContent) return;
+
+    const term = appState.searchTerm || '';
+
+    const titleHtml = highlightText(bot.name, term);
+    const roleText = getTranslation(bot.translation_keys.role) || '';
+    const historyText = getTranslation(bot.translation_keys.history) || '';
+    const funFactKey = bot.translation_keys.funFact;
+    const funFactText = funFactKey ? (getTranslation(funFactKey) || '') : '';
+
+    const techLang = escapeHtml(bot.tech.lang || 'N/A');
+    const techLib = escapeHtml(bot.tech.lib || 'N/A');
+    const techHost = escapeHtml(bot.tech.host || 'N/A');
+    const techDb = escapeHtml(bot.tech.db || 'N/A');
+    const version = escapeHtml(bot.status.version || 'N/A');
+    const statusLabel = getStatusInfo(bot.status).text || escapeHtml(bot.status.key || 'N/A');
+
+    // Format RAM display
+    let ramDisplay = bot.config.ram || 'N/A';
+    if (typeof bot.config.ram === 'number') {
+        ramDisplay = bot.config.ram >= 1024 ? `${(bot.config.ram/1024).toFixed(1).replace('.0','')} GB` : `${bot.config.ram} MB`;
+    }
+
+    modalContent.innerHTML = `
+        <div class="mb-4">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">
+                    ${escapeHtml(bot.name.charAt(0))}
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-[var(--text-primary)]">${titleHtml}</h2>
+                    <div class="text-sm text-[var(--text-secondary)] mt-1">${escapeHtml(bot.name)} • ${statusLabel} • ${escapeHtml(version)}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+                <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_role')}</h3>
+                <p class="text-[var(--text-secondary)]">${highlightText(roleText, term)}</p>
+            </div>
+            <div class="p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+                <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_history')}</h3>
+                <p class="text-[var(--text-secondary)]">${highlightText(historyText, term)}</p>
+            </div>
+        </div>
+
+        ${funFactText ? `
+        <div class="mb-4 p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+            <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_fun_fact')}</h3>
+            <p class="text-[var(--text-secondary)]">${highlightText(funFactText, term)}</p>
+        </div>` : ''}
+
+        <div class="mb-4 p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+            <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_tech_specs')}</h3>
+            <ul class="text-[var(--text-secondary)] space-y-1">
+                <li><strong>Lang:</strong> ${highlightText(techLang, term)}</li>
+                <li><strong>Lib:</strong> ${highlightText(techLib, term)}</li>
+                <li><strong>${getTranslation('modal_host')}:</strong> ${escapeHtml(techHost)}</li>
+                <li><strong>${getTranslation('modal_db')}:</strong> ${escapeHtml(techDb || 'N/A')}</li>
+                <li><strong>${getTranslation('card_ram')}:</strong> ${escapeHtml(ramDisplay)}</li>
+                <li><strong>${getTranslation('card_cpu')}:</strong> ${escapeHtml(bot.config.cpu || 'N/A')}</li>
+                <li><strong>${getTranslation('card_disk')}:</strong> ${escapeHtml(bot.config.disk || 'N/A')}</li>
+            </ul>
+        </div>
+    `;
+
+    // Close is handled by top-right #modal-close; optionally allow ESC to close
+    document.addEventListener('keydown', function onEsc(e) {
+        if (e.key === 'Escape') {
+            hideAllModals();
+            document.removeEventListener('keydown', onEsc);
+        }
+    }, { once: true });
+
+    showModal('modal');
 }
