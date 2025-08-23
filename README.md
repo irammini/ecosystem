@@ -1,1 +1,2 @@
-# backend
+# Backend for manual status website
+This is literally a backend for uhh my website, which change **"status"** by **hand**. So you know? This needed for something bigger, whatever this is the end, this repo is private anyways.
