@@ -19,16 +19,22 @@
     <div class="aurora-background"></div>
     <div class="container mx-auto px-4 py-8 relative z-10">
         
-        <header class="text-center mb-8 relative">
-            <div class="absolute top-0 right-0 flex items-center gap-2">
-                <!-- Nút Cài đặt Theme -->
-                <button id="settings-btn" class="p-2 bg-slate-800/80 border border-slate-700 rounded-full text-slate-300 hover:text-white hover:bg-slate-700/80 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-1.57 1.996A1.532 1.532 0 013.17 7.49c-1.56.38-1.56 2.6 0 2.98a1.532 1.532 0 01.948 2.286c-.836 1.372.734 2.942 1.996 1.57a1.532 1.532 0 012.286.948c.38 1.56 2.6 1.56 2.98 0a1.532 1.532 0 012.286-.948c1.372.836 2.942-.734-1.57-1.996A1.532 1.532 0 0116.83 12.51c1.56-.38 1.56-2.6 0-2.98a1.532 1.532 0 01-.948-2.286c.836-1.372-.734-2.942-1.996-1.57A1.532 1.532 0 0111.49 3.17zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
-                </button>
-            </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 mb-3" data-translate-key="main_title">Hệ sinh thái Teaserverse</h1>
-            <p class="text-slate-400 mt-2" data-translate-key="main_subtitle">Một bản phân tích tương tác về các dự án bot, công nghệ và câu chuyện đằng sau chúng.</p>
-        </header>
+    <!-- Search Bar -->
+    <div class="mb-6">
+        <input type="text" id="search-input" class="w-full p-3 rounded-full border border-slate-700 bg-slate-800/80 text-white focus:outline-none focus:border-indigo-500" placeholder="Tìm kiếm bot...">
+        <button id="search-button" class="hidden">Tìm kiếm</button>
+    </div>
+
+    <header class="text-center mb-8 relative">
+        <div class="absolute top-0 right-0 flex items-center gap-2">
+            <!-- Nút Cài đặt Theme -->
+            <button id="settings-btn" class="p-2 bg-slate-800/80 border border-slate-700 rounded-full text-slate-300 hover:text-white hover:bg-slate-700/80 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-1.57 1.996A1.532 1.532 0 013.17 7.49c-1.56.38-1.56 2.6 0 2.98a1.532 1.532 0 01.948 2.286c-.836 1.372.734 2.942 1.996 1.57a1.532 1.532 0 012.286.948c.38 1.56 2.6 1.56 2.98 0a1.532 1.532 0 012.286-.948c1.372.836 2.942-.734-1.57-1.996A1.532 1.532 0 0116.83 12.51c1.56-.38 1.56-2.6 0-2.98a1.532 1.532 0 01-.948-2.286c.836-1.372-.734-2.942-1.996-1.57A1.532 1.532 0 0111.49 3.17zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
+            </button>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 mb-3" data-translate-key="main_title">Hệ sinh thái Teaserverse</h1>
+        <p class="text-slate-400 mt-2" data-translate-key="main_subtitle">Một bản phân tích tương tác về các dự án bot, công nghệ và câu chuyện đằng sau chúng.</p>
+    </header>
 
         <!-- Navigation Buttons -->
         <nav class="flex flex-wrap justify-center gap-4 mb-10">
@@ -101,7 +107,7 @@
 
         <footer class="text-center py-8 mt-16 border-t border-[var(--border-color)]">
             <p id="footer-text" class="text-sm text-slate-500">
-                Made with <span class="text-pink-500">&lt;3</span> by <a href="#" id="irammini-link" class="text-cyan-400 hover:text-cyan-300 transition-colors">irammini</a>
+                Made with <span class="text-pink-500"><3</span> by <a href="#" id="irammini-link" class="text-cyan-400 hover:text-cyan-300 transition-colors">irammini</a>
             </p>
         </footer>
     </div>

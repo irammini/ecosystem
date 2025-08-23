@@ -4,7 +4,7 @@ const appState = {
     currentFilter: 'all',
     activeTab: 'overview',
     activeTheme: 'aurora',
-    charts: {}
+    charts: {},
 };
 
 // --- CORE LOGIC ---
@@ -64,6 +64,12 @@ function setLanguage(lang, isInitialLoad = false) {
     const timelineText = document.querySelector('.timeline-text');
     if (timelineText) {
         timelineText.textContent = getTranslation('timeline_link');
+    }
+    
+    // Update search input placeholder
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.placeholder = getTranslation('search_placeholder');
     }
     
     // Re-render the language switcher to show the active state
@@ -338,6 +344,9 @@ function setupEventListeners() {
             applyTheme(theme);
         });
     });
+
+    // Search functionality
+    setupSearchFunctionality();
 }
 
 function switchTab(tabId) {
@@ -518,4 +527,114 @@ function updateThemeModalSelection() {
             checkIcon.classList.toggle('hidden', !isActive);
         }
     });
+}
+
+// --- SEARCH FUNCTIONALITY ---
+function setupSearchFunctionality() {
+    const searchInput = document.getElementById('search-input');
+    if (!searchInput) return;
+
+    // Add event listeners for search
+    searchInput.addEventListener('input', handleSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
+
+    // Add placeholder translation
+    searchInput.placeholder = getTranslation('search_placeholder');
+}
+
+function handleSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    
+    if (searchTerm === '') {
+        // If search is empty, revert to current filter
+        filterAndRenderCards();
+        return;
+    }
+
+    // Perform search across all bots
+    const searchResults = searchBots(searchTerm);
+    renderSearchResults(searchResults, searchTerm);
+}
+
+function searchBots(searchTerm) {
+    return botsData.filter(bot => {
+        // Search in bot name
+        if (bot.name.toLowerCase().includes(searchTerm)) return true;
+
+        // Search in programming language
+        if (bot.tech.lang.toLowerCase().includes(searchTerm)) return true;
+
+        // Search in library/framework
+        if (bot.tech.lib.toLowerCase().includes(searchTerm)) return true;
+
+        // Search in status
+        if (bot.status.key.toLowerCase().includes(searchTerm)) return true;
+
+        // Search in translated role description
+        const roleText = getTranslation(bot.translation_keys.role).toLowerCase();
+        if (roleText.includes(searchTerm)) return true;
+
+        // Search in translated history description
+        const historyText = getTranslation(bot.translation_keys.history).toLowerCase();
+        if (historyText.includes(searchTerm)) return true;
+
+        return false;
+    });
+}
+
+function renderSearchResults(bots, searchTerm) {
+    const grid = document.getElementById('bot-grid');
+    if (!grid) return;
+
+    if (bots.length === 0) {
+        // Show no results message
+        grid.innerHTML = `
+            <div class="col-span-full text-center py-12">
+                <div class="text-6xl mb-4">🔍</div>
+                <h3 class="text-xl font-bold text-[var(--text-primary)] mb-2">${getTranslation('search_no_results')}</h3>
+                <p class="text-[var(--text-secondary)]">${getTranslation('search_no_results_desc').replace('{term}', `<span class="text-indigo-400">"${searchTerm}"</span>`)}</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Render the search results
+    renderBotCards(bots);
+
+    // Update the directory title to show search results
+    const directoryTitle = document.querySelector('#bot-directory h2');
+    if (directoryTitle) {
+        directoryTitle.innerHTML = `${getTranslation('search_results')} <span class="text-indigo-400">"${searchTerm}"</span> <span class="text-sm text-[var(--text-secondary)]">(${bots.length} ${bots.length === 1 ? getTranslation('search_result') : getTranslation('search_results_plural')})</span>`;
+    }
+}
+
+// Update filterAndRenderCards to reset search when filters are used
+function filterAndRenderCards() {
+    const filter = appState.currentFilter;
+    let filteredBots;
+    if (filter === 'all') {
+        filteredBots = botsData;
+    } else if (['stable', 'dev', 'planned', 'joke'].includes(filter)) {
+        filteredBots = botsData.filter(bot => bot.status.key === filter);
+    } else {
+        filteredBots = botsData.filter(bot => bot.tech.lang === filter);
+    }
+    
+    // Reset search input and directory title when using filters
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    
+    const directoryTitle = document.querySelector('#bot-directory h2');
+    if (directoryTitle) {
+        directoryTitle.innerHTML = getTranslation('directory_title');
+    }
+    
+    renderBotCards(filteredBots);
 }
