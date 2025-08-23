@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaserverse Ecosystem Dashboard</title>
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased" data-theme="aurora">
+    <div class="aurora-background"></div>
+    <div class="container mx-auto px-4 py-8 relative z-10">
+        
+        <header class="text-center mb-8 relative">
+            <div class="absolute top-0 right-0 flex items-center gap-2">
+                <!-- Nút Cài đặt Theme -->
+                <button id="settings-btn" class="p-2 bg-slate-800/80 border border-slate-700 rounded-full text-slate-300 hover:text-white hover:bg-slate-700/80 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-1.57 1.996A1.532 1.532 0 013.17 7.49c-1.56.38-1.56 2.6 0 2.98a1.532 1.532 0 01.948 2.286c-.836 1.372.734 2.942 1.996 1.57a1.532 1.532 0 012.286.948c.38 1.56 2.6 1.56 2.98 0a1.532 1.532 0 012.286-.948c1.372.836 2.942-.734-1.57-1.996A1.532 1.532 0 0116.83 12.51c1.56-.38 1.56-2.6 0-2.98a1.532 1.532 0 01-.948-2.286c.836-1.372-.734-2.942-1.996-1.57A1.532 1.532 0 0111.49 3.17zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500 mb-3" data-translate-key="main_title">Hệ sinh thái Teaserverse</h1>
+            <p class="text-slate-400 mt-2" data-translate-key="main_subtitle">Một bản phân tích tương tác về các dự án bot, công nghệ và câu chuyện đằng sau chúng.</p>
+        </header>
+
+        <!-- Navigation Buttons -->
+        <nav class="flex flex-wrap justify-center gap-4 mb-10">
+            <a href="https://gacha.teaserverse.qzz.io/" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                </svg>
+                Gacha Bots
+            </a>
+            <a href="https://timeline.teaserverse.qzz.io/" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg flex items-center gap-2" data-translate-key="timeline_link">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                </svg>
+                <span class="timeline-text">Timeline</span>
+            </a>
+            <!-- Nút VPS Simulator mới -->
+            <a href="https://terminal.teaserverse.qzz.io/" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                </svg>
+                VPS Simulator
+            </a>
+        </nav>
+
+        <!-- Command Center -->
+        <section class="mb-10 glass-effect rounded-2xl shadow-2xl">
+            <!-- Tab Buttons -->
+            <div class="flex border-b border-[var(--border-color)] p-2">
+                <button id="tab-overview" class="tab-btn flex-1 py-2 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors text-[var(--text-secondary)] hover:bg-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" /><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" /></svg>
+                    <span data-translate-key="tab_overview">Tổng quan</span>
+                </button>
+                <button id="tab-updates" class="tab-btn flex-1 py-2 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors text-[var(--text-secondary)] hover:bg-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                    <span data-translate-key="tab_updates">Cập nhật</span>
+                </button>
+            </div>
+            <!-- Tab Content -->
+            <div class="p-4 md:p-6">
+                <div id="content-overview" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-[var(--text-primary)] mb-2 text-center" data-translate-key="lang_chart_title">Phân bổ Ngôn ngữ</h3>
+                            <div class="chart-container"><canvas id="langChart"></canvas></div>
+                        </div>
+                         <div>
+                            <h3 class="text-lg font-bold text-[var(--text-primary)] mb-2 text-center" data-translate-key="ram_chart_title">Phân bổ RAM (MB)</h3>
+                            <div class="chart-container"><canvas id="ramChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="content-updates" class="tab-content hidden">
+                    <!-- Update items will be injected here by JavaScript -->
+                    <div class="timeline">
+                        <!-- Timeline items will be dynamically added here -->
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main>
+            <section id="bot-directory">
+                <h2 class="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-4" data-translate-key="directory_title">Danh bạ Bot</h2>
+                <div id="filters" class="flex flex-wrap gap-2 mb-6"></div>
+                <div id="bot-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+            </section>
+        </main>
+
+        <footer class="text-center py-8 mt-16 border-t border-[var(--border-color)]">
+            <p id="footer-text" class="text-sm text-slate-500">
+                Made with <span class="text-pink-500">&lt;3</span> by <a href="#" id="irammini-link" class="text-cyan-400 hover:text-cyan-300 transition-colors">irammini</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal w-11/12 max-w-2xl glass-effect rounded-2xl shadow-2xl">
+        <div id="modal-content" class="p-6 md:p-8"></div>
+        <button id="modal-close" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+    </div>
+
+    <!-- Theme Settings Modal -->
+     <div id="settings-modal" class="modal w-11/12 max-w-sm glass-effect rounded-2xl shadow-2xl">
+        <div class="p-6 relative">
+             <button id="settings-modal-close" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h2 class="text-xl font-bold text-[var(--text-primary)] mb-4" data-translate-key="settings_title">Cài đặt</h2>
+            
+            <!-- Language Selector -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-2" data-translate-key="language_settings_title">Cài đặt Ngôn ngữ</h3>
+                <div id="lang-switcher" class="flex items-center bg-slate-800/80 border border-slate-700 rounded-full p-1 text-sm font-medium"></div>
+            </div>
+
+            <!-- Theme Settings -->
+            <div class="space-y-2">
+                <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-2" data-translate-key="theme_settings_title">Cài đặt Giao diện</h3>
+                <button data-theme="aurora" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
+                    <span>✨ Aurora (Mặc định)</span>
+                    <span class="check-icon hidden">✓</span>
+                </button>
+                <button data-theme="classic" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
+                    <span>☀️ Classic</span>
+                    <span class="check-icon hidden">✓</span>
+                </button>
+                <button data-theme="classic-black" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
+                    <span>🌑 Classic - đen</span>
+                    <span class="check-icon hidden">✓</span>
+                </button>
+                <button data-theme="cyberpunk" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
+                    <span>🌃 Cyberpunk</span>
+                    <span class="check-icon hidden">✓</span>
+                </button>
+                <button data-theme="retro" class="theme-btn w-full text-left p-3 rounded-lg flex items-center justify-between transition-colors">
+                    <span>📟 Retro Terminal</span>
+                    <span class="check-icon hidden">✓</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Your Custom JavaScript -->
+    <!-- Data should be loaded before the main script -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

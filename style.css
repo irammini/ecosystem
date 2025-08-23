@@ -1,0 +1,221 @@
+/* --- CÀI ĐẶT THEME --- */
+:root {
+    --bg-primary: #020617;
+    --bg-secondary: rgba(15, 23, 42, 0.6);
+    --bg-tertiary: rgba(30, 41, 59, 0.7);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --backdrop-bg: rgba(2, 6, 23, 0.8);
+    --aurora-opacity: 1;
+}
+
+html[data-theme="classic"] {
+    color-scheme: light;
+    --bg-primary: #f1f5f9;
+    --bg-secondary: rgba(255, 255, 255, 0.8);
+    --bg-tertiary: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --backdrop-bg: rgba(0, 0, 0, 0.5);
+    --aurora-opacity: 0;
+}
+
+html[data-theme="classic-black"] {
+    color-scheme: dark;
+    --bg-primary: #0a0a0a;
+    --bg-secondary: rgba(15, 15, 15, 0.8);
+    --bg-tertiary: #1a1a1a;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-primary: #e5e5e5;
+    --text-secondary: #a3a3a3;
+    --backdrop-bg: rgba(0, 0, 0, 0.7);
+    --aurora-opacity: 0;
+}
+
+html[data-theme="cyberpunk"] {
+    --bg-primary: #1a082d;
+    --bg-secondary: rgba(26, 8, 45, 0.7);
+    --bg-tertiary: rgba(45, 12, 70, 0.8);
+    --border-color: rgba(255, 255, 255, 0.2);
+    --text-primary: #e2d1f7;
+    --text-secondary: #b8a3f7;
+    --backdrop-bg: rgba(26, 8, 45, 0.8);
+    --aurora-opacity: 1;
+    --aurora-color-1: rgba(240, 0, 170, 0.3); /* Pink */
+    --aurora-color-2: rgba(0, 255, 255, 0.3); /* Cyan */
+}
+
+html[data-theme="retro"] {
+    --bg-primary: #1f1f1f;
+    --bg-secondary: rgba(31, 31, 31, 0.8);
+    --bg-tertiary: rgba(50, 50, 50, 0.9);
+    --border-color: #33ff33;
+    --text-primary: #33ff33;
+    --text-secondary: #00b300;
+    --backdrop-bg: rgba(0, 0, 0, 0.9);
+    --aurora-opacity: 0;
+}
+/* --- KẾT THÚC CÀI ĐẶT THEME --- */
+
+html { scroll-behavior: smooth; }
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.5s ease;
+    overflow-x: hidden;
+}
+.aurora-background {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    opacity: var(--aurora-opacity);
+    transition: opacity 0.5s ease;
+    --aurora-color-1: rgba(139, 92, 246, 0.3);
+    --aurora-color-2: rgba(59, 130, 246, 0.3);
+    background-size: cover;
+}
+.aurora-background::before, .aurora-background::after {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    filter: blur(100px);
+    mix-blend-mode: screen;
+    animation: aurora-animation 20s linear infinite;
+}
+.aurora-background::before {
+    background: var(--aurora-color-1);
+    top: -200px; left: -200px;
+}
+.aurora-background::after {
+    background: var(--aurora-color-2);
+    bottom: -200px; right: -200px;
+    animation-direction: reverse;
+    animation-duration: 25s;
+}
+@keyframes aurora-animation {
+    0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
+}
+
+.glass-effect {
+    background-color: var(--bg-secondary);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.chart-container { position: relative; width: 100%; height: 280px; }
+
+/* Modal Styles */
+.modal { 
+    position: fixed; top: 50%; left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 50; display: none; max-height: 90vh; overflow-y: auto;
+}
+.fade-in { animation: fadeIn 0.3s ease-out forwards; }
+.fade-out { animation: fadeOut 0.3s ease-in forwards; }
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); } 
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); } 
+}
+@keyframes fadeOut { 
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1); } 
+    to { opacity: 0; transform: translate(-50%, -48%) scale(0.95); } 
+}
+
+/* Card Hover Effect */
+.card-glow-effect {
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-glow-effect:before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 1rem;
+    border: 1px solid transparent;
+    background: radial-gradient(400px at var(--mouse-x) var(--mouse-y), rgba(167, 139, 250, 0.25), transparent 80%);
+    z-index: 0;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+.card-glow-effect:hover:before { opacity: 1; }
+.card-glow-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+}
+html[data-theme="classic"] .card-glow-effect:hover {
+     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+}
+.card-content { position: relative; z-index: 1; }
+
+/* Chatbot Styles */
+.chat-bubble-user { background-color: #4f46e5; color: white; }
+.chat-bubble-bot { background-color: #374151; color: #d1d5db; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* Timeline for Updates Tab */
+.timeline {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    background-color: var(--border-color);
+    top: 20px;
+    bottom: 20px;
+    left: 20px;
+    margin-left: -1.5px;
+    border-radius: 3px;
+}
+.timeline-item {
+    padding: 10px 0;
+    position: relative;
+    background-color: inherit;
+    width: 100%;
+    padding-left: 60px;
+    padding-right: 10px;
+}
+.timeline-icon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 0;
+    background-color: var(--bg-tertiary);
+    border: 3px solid var(--border-color);
+    top: 24px;
+    left: 20px; /* Căn icon vào đường timeline */
+    margin-left: -23px; /* Dịch icon về bên trái một nửa chiều rộng để nó nằm chính giữa */
+    border-radius: 50%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+.timeline-content {
+    padding: 15px;
+    background-color: var(--bg-tertiary);
+    position: relative;
+    border-radius: 8px;
+}
+.timeline-date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
