@@ -218,8 +218,8 @@ function renderBotCards(bots) {
             techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="tech-icon">`;
         } else if (lang.includes('java')) {
             techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" class="tech-icon">`;
-        } else if (lang.includes('rust')) {
-            techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" alt="Rust" class="tech-icon">`;
+        } else if (lang.includes('rust')) {    
+            techIconHtml = `<img src="https://ik.imagekit.io/irammini/rust-original.svg?updatedAt=1756023206076" alt="Rust" class="tech-icon">`;
         } else if (lang.includes('lua')) {
             techIconHtml = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/lua/lua-plain.svg" alt="Lua" class="tech-icon">`;
         } else if (lang.includes('bun')) {
@@ -585,8 +585,8 @@ function updateThemeModalSelection() {
 // --- SEARCH FUNCTIONALITY ---
 function setupSearchFunctionality() {
     const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-    if (!searchInput || !searchButton) return;
+    // Xóa các dòng liên quan đến searchButton và search-input-clear
+    if (!searchInput) return;
 
     // Debounce search to improve performance
     let searchTimeout;
@@ -595,12 +595,7 @@ function setupSearchFunctionality() {
         searchTimeout = setTimeout(callback, delay);
     };
 
-    // Trigger search on button click or Enter key
-    searchButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleSearch();
-    });
-
+    // Trigger search on Enter key
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -610,12 +605,7 @@ function setupSearchFunctionality() {
 
     // Real-time search with debouncing
     searchInput.addEventListener('input', () => {
-        const clearBtn = document.getElementById('search-input-clear');
-        if (clearBtn) {
-            clearBtn.classList.toggle('hidden', searchInput.value.trim() === '');
-        }
-
-        // Debounce the search to avoid excessive rendering
+        // Không còn nút clear trên thanh search
         debounceSearch(() => {
             if (searchInput.value.trim() !== '') {
                 handleSearch();
@@ -763,76 +753,120 @@ function showBotModal(botId) {
 
     const term = appState.searchTerm || '';
 
-    const titleHtml = highlightText(bot.name, term);
-    const roleText = getTranslation(bot.translation_keys.role) || '';
-    const historyText = getTranslation(bot.translation_keys.history) || '';
-    const funFactKey = bot.translation_keys.funFact;
-    const funFactText = funFactKey ? (getTranslation(funFactKey) || '') : '';
-
-    const techLang = escapeHtml(bot.tech.lang || 'N/A');
-    const techLib = escapeHtml(bot.tech.lib || 'N/A');
-    const techHost = escapeHtml(bot.tech.host || 'N/A');
-    const techDb = escapeHtml(bot.tech.db || 'N/A');
-    const version = escapeHtml(bot.status.version || 'N/A');
-    const statusLabel = getStatusInfo(bot.status).text || escapeHtml(bot.status.key || 'N/A');
-
     // Format RAM display
     let ramDisplay = bot.config.ram || 'N/A';
     if (typeof bot.config.ram === 'number') {
         ramDisplay = bot.config.ram >= 1024 ? `${(bot.config.ram/1024).toFixed(1).replace('.0','')} GB` : `${bot.config.ram} MB`;
     }
 
-    modalContent.innerHTML = `
-        <div class="mb-4">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">
-                    ${escapeHtml(bot.name.charAt(0))}
+    // Thêm state cho việc hiển thị chi tiết
+    let showDetails = false;
+
+    function renderModalContent() {
+        modalContent.innerHTML = `
+            <div class="mb-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">
+                        ${escapeHtml(bot.name.charAt(0))}
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-[var(--text-primary)]">${highlightText(bot.name, term)}</h2>
+                        <div class="text-sm text-[var(--text-secondary)] mt-1">${escapeHtml(bot.name)} • ${getStatusInfo(bot.status).text} • ${escapeHtml(bot.status.version || 'N/A')}</div>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-bold text-[var(--text-primary)]">${titleHtml}</h2>
-                    <div class="text-sm text-[var(--text-secondary)] mt-1">${escapeHtml(bot.name)} • ${statusLabel} • ${escapeHtml(version)}</div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+                    <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_role')}</h3>
+                    <p class="text-[var(--text-secondary)]">${highlightText(getTranslation(bot.translation_keys.role), term)}</p>
+                </div>
+                <div class="p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+                    <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_history')}</h3>
+                    <p class="text-[var(--text-secondary)]">${highlightText(getTranslation(bot.translation_keys.history), term)}</p>
                 </div>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div class="p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
-                <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_role')}</h3>
-                <p class="text-[var(--text-secondary)]">${highlightText(roleText, term)}</p>
+            <div class="mb-4 p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
+                <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_tech_specs')}</h3>
+                <ul class="text-[var(--text-secondary)] space-y-1">
+                    <li><strong>Lang:</strong> ${highlightText(bot.tech.lang || 'N/A', term)}</li>
+                    <li><strong>Lib:</strong> ${highlightText(bot.tech.lib || 'N/A', term)}</li>
+                    <li><strong>${getTranslation('modal_host')}:</strong> ${escapeHtml(bot.tech.host || 'N/A')}</li>
+                    <li><strong>${getTranslation('modal_db')}:</strong> ${escapeHtml(bot.tech.db || 'N/A')}</li>
+                    <li><strong>${getTranslation('card_ram')}:</strong> ${escapeHtml(ramDisplay)}</li>
+                    <li><strong>${getTranslation('card_cpu')}:</strong> ${escapeHtml(bot.config.cpu || 'N/A')}</li>
+                    <li><strong>${getTranslation('card_disk')}:</strong> ${escapeHtml(bot.config.disk || 'N/A')}</li>
+                </ul>
+                <button id="toggle-details" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    ${showDetails ? 'Ẩn chi tiết' : 'Xem chi tiết'}
+                </button>
+                ${showDetails ? `
+                    <div class="mt-4 pt-4 border-t border-[var(--border-color)]">
+                        <h4 class="font-semibold text-[var(--text-primary)] mb-2">Thông tin chi tiết:</h4>
+                        <ul class="text-[var(--text-secondary)] space-y-1">
+                            <li><strong>Uptime Kuma:</strong> ${renderBool(uptimeKumaMap[bot.id])}</li>
+                            <li><strong>Repo:</strong> ${
+                                typeof repoMap[bot.id] === 'string' && repoMap[bot.id].startsWith('http')
+                                    ? `<a href="${repoMap[bot.id]}" target="_blank" class="text-cyan-400 underline">Link</a>`
+                                    : (repoMap[bot.id] === false ? '<span style="color:#ef4444">✖</span>' : 
+                                       repoMap[bot.id] || '<span style="color:#a3a3a3">N/A</span>')
+                            }</li>
+                            <li><strong>Avatar riêng:</strong> ${renderBool(avatarMap[bot.id])}</li>
+                            <li><strong>Status Discord:</strong> ${renderBool(statusDiscordMap[bot.id])}</li>
+                        </ul>
+                    </div>
+                ` : ''}
             </div>
-            <div class="p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
-                <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_history')}</h3>
-                <p class="text-[var(--text-secondary)]">${highlightText(historyText, term)}</p>
-            </div>
-        </div>
+        `;
 
-        ${funFactText ? `
-        <div class="mb-4 p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
-            <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_fun_fact')}</h3>
-            <p class="text-[var(--text-secondary)]">${highlightText(funFactText, term)}</p>
-        </div>` : ''}
+        // Add event listener for toggle button
+        document.getElementById('toggle-details')?.addEventListener('click', () => {
+            showDetails = !showDetails;
+            renderModalContent();
+        });
+    }
 
-        <div class="mb-4 p-4 bg-black/5 rounded-lg border border-[var(--border-color)]">
-            <h3 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('modal_tech_specs')}</h3>
-            <ul class="text-[var(--text-secondary)] space-y-1">
-                <li><strong>Lang:</strong> ${highlightText(techLang, term)}</li>
-                <li><strong>Lib:</strong> ${highlightText(techLib, term)}</li>
-                <li><strong>${getTranslation('modal_host')}:</strong> ${escapeHtml(techHost)}</li>
-                <li><strong>${getTranslation('modal_db')}:</strong> ${escapeHtml(techDb || 'N/A')}</li>
-                <li><strong>${getTranslation('card_ram')}:</strong> ${escapeHtml(ramDisplay)}</li>
-                <li><strong>${getTranslation('card_cpu')}:</strong> ${escapeHtml(bot.config.cpu || 'N/A')}</li>
-                <li><strong>${getTranslation('card_disk')}:</strong> ${escapeHtml(bot.config.disk || 'N/A')}</li>
-            </ul>
-        </div>
-    `;
-
-    // Close is handled by top-right #modal-close; optionally allow ESC to close
-    document.addEventListener('keydown', function onEsc(e) {
-        if (e.key === 'Escape') {
-            hideAllModals();
-            document.removeEventListener('keydown', onEsc);
-        }
-    }, { once: true });
+    renderModalContent();
 
     showModal('modal');
 }
+
+// Helper function for boolean rendering
+function renderBool(val) {
+    if (val === true) return '<span style="color:#22c55e">✔</span>';
+    if (val === false) return '<span style="color:#ef4444">✖</span>';
+    return '<span style="color:#a3a3a3">N/A</span>';
+}
+
+// Maps for details
+const uptimeKumaMap = {
+    'ramteaser': false, 'teaserlite': true, 'teaserpotato': true,
+    'teaserhardcore': false, 'teaserdust': true, 'playercycle': true,
+    'teasermusic': true, 'teaserdrift': true, 'teaserai': true,
+    'teaserultra': true, 'teaserradish': true, 'cputeaser': true,
+    'teasereclipse': 'N/A', 'teaserrebun': 'N/A', 'teaserkite': false,
+    'teaserscnx': false, 'iminibot': true
+};
+
+const repoMap = {
+    'iminibot': 'https://github.com/irammini/IminiBot',
+    'ramteaser': 'Có (private)', 'teaserlite': 'Có (private)',
+    'teaserpotato': false, 'teaserhardcore': false, 'teaserdust': false,
+    'playercycle': 'Có (private)', 'teasermusic': false,
+    'teaserdrift': 'Có (private)', 'teaserai': false,
+    'teaserultra': 'Có (private)', 'teaserradish': 'Có (private)',
+    'cputeaser': 'Có (private)', 'teasereclipse': 'N/A',
+    'teaserrebun': 'N/A', 'teaserkite': false, 'teaserscnx': false
+};
+
+const avatarMap = {
+    'teaserai': true,
+    'teaser': true
+};
+
+const statusDiscordMap = {
+    'ramteaser': true, 'teaserlite': true, 'teaserpotato': true,
+    'teasermusic': true, 'cputeaser': true, 'teaserkite': true,
+    'teaserscnx': true
+};

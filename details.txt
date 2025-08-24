@@ -1,0 +1,49 @@
+Uptime Kuma (có được monitor không):
+RAM Teaser: false
+Teaser Lite: true
+Teaser Potato: true
+Teaser Hardcore: false
+Teaser Dust: true
+Teaser Cycle: true
+Teaser Music: true
+Teaser Drift: true
+Teaser AI: true
+Teaser Ultra: true
+Teaser Radish: true
+CPU Teaser: true
+Teaser Eclipse: N/A
+Teaser Rebun: N/A
+Teaser Kite: false
+Teaser SCNX: false
+
+Repo (có repo không):
+IminiBot: https://github.com/irammini/IminiBot
+RAM Teaser: true (private)
+Teaser Lite: true (private)
+Teaser Potato: false
+Teaser Hardcore: false
+Teaser Dust: false
+Teaser Cycle: true (private)
+Teaser Music: false (repo có thể lấy của JMusicBot)
+Teaser Drift: true (private)
+Teaser AI: false
+Teaser Ultra: true (private)
+Teaser Radish: true (private)
+CPU Teaser: true (private)
+Teaser Eclipse: N/A
+Teaser Rebun: N/A 
+Teaser Kite: false
+Teaser SCNX: false
+
+Avatar (Có avatar riêng không):
+Tất cả đều false trừ Teaser AI và Teaser 
+
+Status (Có status Discord không):
+Tất cả false trừ:
+RAM Teaser
+Teaser Lite
+Teaser Potato
+Teaser Music
+CPU Teaser
+Teaser Kite & Teaser SCNX
+
