@@ -799,21 +799,21 @@ function showBotModal(botId) {
                     <li><strong>${getTranslation('card_disk')}:</strong> ${escapeHtml(bot.config.disk || 'N/A')}</li>
                 </ul>
                 <button id="toggle-details" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-                    ${showDetails ? 'Ẩn chi tiết' : 'Xem chi tiết'}
+                    ${showDetails ? getTranslation('hide_technical_details') : getTranslation('view_technical_details')}
                 </button>
                 ${showDetails ? `
                     <div class="mt-4 pt-4 border-t border-[var(--border-color)]">
-                        <h4 class="font-semibold text-[var(--text-primary)] mb-2">Thông tin chi tiết:</h4>
+                        <h4 class="font-semibold text-[var(--text-primary)] mb-2">${getTranslation('technical_details')}:</h4>
                         <ul class="text-[var(--text-secondary)] space-y-1">
-                            <li><strong>Uptime Kuma:</strong> ${renderBool(uptimeKumaMap[bot.id])}</li>
-                            <li><strong>Repo:</strong> ${
+                            <li><strong>${getTranslation('uptime_kuma')}:</strong> ${renderBool(uptimeKumaMap[bot.id])}</li>
+                            <li><strong>${getTranslation('repository')}:</strong> ${
                                 typeof repoMap[bot.id] === 'string' && repoMap[bot.id].startsWith('http')
                                     ? `<a href="${repoMap[bot.id]}" target="_blank" class="text-cyan-400 underline">Link</a>`
                                     : (repoMap[bot.id] === false ? '<span style="color:#ef4444">✖</span>' : 
                                        repoMap[bot.id] || '<span style="color:#a3a3a3">N/A</span>')
                             }</li>
-                            <li><strong>Avatar riêng:</strong> ${renderBool(avatarMap[bot.id])}</li>
-                            <li><strong>Status Discord:</strong> ${renderBool(statusDiscordMap[bot.id])}</li>
+                            <li><strong>${getTranslation('custom_avatar')}:</strong> ${renderBool(avatarMap[bot.id])}</li>
+                            <li><strong>${getTranslation('discord_status')}:</strong> ${renderBool(statusDiscordMap[bot.id])}</li>
                         </ul>
                     </div>
                 ` : ''}
