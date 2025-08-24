@@ -851,12 +851,12 @@ const uptimeKumaMap = {
 
 const repoMap = {
     'iminibot': 'https://github.com/irammini/IminiBot',
-    'ramteaser': 'Có (private)', 'teaserlite': 'Có (private)',
+    'ramteaser': 'Private', 'teaserlite': 'Private',
     'teaserpotato': false, 'teaserhardcore': false, 'teaserdust': false,
-    'playercycle': 'Có (private)', 'teasermusic': false,
-    'teaserdrift': 'Có (private)', 'teaserai': false,
-    'teaserultra': 'Có (private)', 'teaserradish': 'Có (private)',
-    'cputeaser': 'Có (private)', 'teasereclipse': 'N/A',
+    'playercycle': 'Private', 'teasermusic': false,
+    'teaserdrift': 'Private', 'teaserai': false,
+    'teaserultra': 'Private', 'teaserradish': 'Private',
+    'cputeaser': 'Private', 'teasereclipse': 'N/A',
     'teaserrebun': 'N/A', 'teaserkite': false, 'teaserscnx': false
 };
 
