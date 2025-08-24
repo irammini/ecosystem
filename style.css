@@ -262,3 +262,32 @@ html[data-theme="classic"] .card-glow-effect:hover {
     vertical-align: -2px;
     margin-right: 6px;
 }
+
+/* Loading Overlay */
+#loading-overlay {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background: var(--bg-primary, #020617);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s cubic-bezier(.4,0,.2,1);
+    opacity: 1;
+}
+#loading-overlay.loaded {
+    opacity: 0;
+    pointer-events: none;
+}
+#loading-overlay .spinner {
+    width: 56px;
+    height: 56px;
+    border: 6px solid #6366f1;
+    border-top: 6px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 24px #6366f1aa;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

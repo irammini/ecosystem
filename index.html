@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased" data-theme="aurora">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
     <div class="aurora-background"></div>
     <div class="container mx-auto px-4 py-8 relative z-10">
         
@@ -168,5 +172,15 @@
     <!-- Data should be loaded before the main script -->
     <script src="data.js"></script>
     <script src="script.js"></script>
+    <script>
+    // Hide loading overlay when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.classList.add('loaded');
+            setTimeout(() => overlay.style.display = 'none', 400);
+        }
+    });
+    </script>
 </body>
 </html>
