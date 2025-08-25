@@ -42,7 +42,7 @@ Teaserverse Ecosystem Dashboard là một ứng dụng web cho phép bạn khám
 
 ## 🌐 Đóng góp & phát triển
 
-- Fork, chỉnh sửa, gửi PR nếu muốn đóng góp thêm bot, dịch thuật, hoặc tính năng mới.
+- Fork, chỉnh sửa, gửi PR nếu muốn sửa lỗi, dịch thuật, hoặc tính năng mới.
 - Dữ liệu bot nằm ở file `data.js`, có thể thêm/sửa trực tiếp.
 
 ## 📜 Bản quyền
