@@ -55,3 +55,5 @@ Teaserverse Ecosystem Dashboard là một ứng dụng web cho phép bạn khám
 **Made with love by [irammini](https://github.com/irammini)**
 
 *Đừng hỏi vì sao tôi lại viết cái này, tôi cũng không biết nữa...*
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I51KARDK)
