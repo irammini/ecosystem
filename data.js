@@ -47,7 +47,7 @@ const updatesData = [
  * Dữ liệu chi tiết về tất cả các bot trong hệ sinh thái.
  */
 const botsData = [
-    { id: 'iminibot', name: 'IminiBot', isMain: true, tech: { lang: 'Python', lib: 'Nextcord', db: 'PostgreSQL', host: 'Orihost' }, config: { ram: 2 * 1024, cpu: '100%', disk: '3GB' }, status: { version: 'v3.9.1', key: 'stable' }, translation_keys: { role: 'role_iminibot', history: 'history_iminibot', roadmap: 'roadmap_iminibot' } },
+    { id: 'iminibot', name: 'IminiBot', isMain: true, tech: { lang: 'Python', lib: 'Nextcord', db: 'PostgreSQL', host: 'SillyDev' }, config: { ram: 2 * 1024, cpu: '100%', disk: '3GB' }, status: { version: 'v3.9.1', key: 'stable' }, translation_keys: { role: 'role_iminibot', history: 'history_iminibot', roadmap: 'roadmap_iminibot' } },
     { id: 'ramteaser', name: 'RAM Teaser', tech: { lang: 'JavaScript', lib: 'discord.js', host: 'Bot-hosting' }, config: { ram: 1024, cpu: '50%', disk: '3GB' }, status: { version: 'v1.0', key: 'stable' }, translation_keys: { role: 'role_ramteaser', history: 'history_ramteaser', funFact: 'funFact_ramteaser' } },
     { id: 'teaserlite', name: 'Teaser Lite', tech: { lang: 'Python', lib: 'discord.py', host: 'Zluqe' }, config: { ram: 256, cpu: '50%', disk: '512MB' }, status: { version: 'v1.0', key: 'stable' }, translation_keys: { role: 'role_teaserlite', history: 'history_teaserlite', funFact: 'funFact_teaserlite' } },
     { id: 'teaserpotato', name: 'Teaser Potato', tech: { lang: 'JavaScript', lib: 'Eris', host: 'Lunes' }, config: { ram: 128, cpu: '15%', disk: '512MB' }, status: { version: 'v1.0', key: 'stable' }, translation_keys: { role: 'role_teaserpotato', history: 'history_teaserpotato', funFact: 'funFact_teaserpotato' } },
@@ -409,3 +409,4 @@ const translations = {
 		discord_status: "Статус Discord",
 	},
 };
+
