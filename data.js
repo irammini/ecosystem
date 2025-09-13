@@ -56,7 +56,7 @@ const botsData = [
     { id: 'playercycle', name: 'Teaser Cycle', tech: { lang: 'Python', lib: 'Interactions.py', host: 'Fps.ms' }, config: { ram: 128, cpu: '25%', disk: '250MB' }, status: { version: 'v1.1', key: 'stable' }, translation_keys: { role: 'role_playercycle', history: 'history_playercycle', funFact: 'funFact_playercycle' } },
     { id: 'teasermusic', name: 'Teaser Music', tech: { lang: 'Java', lib: 'JDA (JMusicBot)', host: 'HMB' }, config: { ram: 2048, cpu: '200%', disk: '4GB' }, status: { version: 'v1.0', key: 'stable' }, translation_keys: { role: 'role_teasermusic', history: 'history_teasermusic', funFact: 'funFact_teasermusic' } },
     { id: 'teaserdrift', name: 'Teaser Drift', tech: { lang: 'Python', lib: 'Pycord', host: 'Daki' }, config: { ram: 512, cpu: '50%', disk: '1GB' }, status: { version: 'v1.0', key: 'dev' }, translation_keys: { role: 'role_teaserdrift', history: 'history_teaserdrift', funFact: 'funFact_teaserdrift' } },
-    { id: 'teaserai', name: 'Teaser AI', tech: { lang: 'JavaScript', lib: 'discord.js', host: 'Hidencloud' }, config: { ram: 3 * 1024, cpu: '200%', disk: '15GB' }, status: { version: 'v1.0-beta', key: 'dev' }, translation_keys: { role: 'role_teaserai', history: 'history_teaserai', funFact: 'funFact_teasermusic' } },
+    { id: 'teaserai', name: 'Teaser AI', tech: { lang: 'JavaScript', lib: '@discord.js/core', host: 'Hidencloud' }, config: { ram: 3 * 1024, cpu: '200%', disk: '15GB' }, status: { version: 'v1.0-beta', key: 'dev' }, translation_keys: { role: 'role_teaserai', history: 'history_teaserai', funFact: 'funFact_teasermusic' } },
     { id: 'teaserultra', name: 'Teaser Ultra', tech: { lang: 'Rust', lib: 'Twilight', db: 'Supabase', host: 'HMB' }, config: { ram: 2048, cpu: '200%', disk: '3GB' }, status: { version: 'v0.0.2-alpha', key: 'dev' }, translation_keys: { role: 'role_teaserultra', history: 'history_teaserultra', funFact: 'funFact_teaserultra' } },
     { id: 'teaserradish', name: 'Teaser Radish', tech: { lang: 'JavaScript', lib: 'Oceanic.js', host: 'KataBump' }, config: { ram: 308, cpu: '25%', disk: '716MB' }, status: { version: 'v1.0-release', key: 'stable' }, translation_keys: { role: 'role_teaserradish', history: 'history_teaserradish', funFact: 'funFact_teaserradish' } },
     { id: 'cputeaser', name: 'CPU Teaser', tech: { lang: 'Python', lib: 'Disnake', db: 'SQLite', host: 'Orihost' }, config: { ram: 512, cpu: '80%', disk: '1GB' }, status: { version: 'v1.0', key: 'stable' }, translation_keys: { role: 'role_cputeaser', history: 'history_cputeaser', funFact: 'funFact_cputeaser' } },
@@ -409,5 +409,6 @@ const translations = {
 		discord_status: "Статус Discord",
 	},
 };
+
 
 
