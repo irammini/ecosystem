@@ -14,6 +14,20 @@
     
     <!-- Your Custom CSS -->
     <link rel="stylesheet" href="style.css">
+    <!-- Thêm CSS mới để xử lý hiển thị ngôn ngữ -->
+    <style>
+        .lang-text > span {
+            display: none;
+        }
+        .lang-text:lang(vi) > span[lang="vi"],
+        .lang-text:lang(en) > span[lang="en"],
+        .lang-text:lang(ja) > span[lang="ja"],
+        .lang-text:lang(fr) > span[lang="fr"],
+        .lang-text:lang(es) > span[lang="es"],
+        .lang-text:lang(ru) > span[lang="ru"] {
+            display: inline;
+        }
+    </style>
 </head>
 <body class="antialiased" data-theme="aurora">
     <!-- Loading Overlay -->
@@ -21,6 +35,24 @@
         <div class="spinner"></div>
     </div>
     <div class="aurora-background"></div>
+    
+    <!-- Thông báo lỗi thời mới -->
+    <div id="outdated-banner" class="fixed top-0 left-0 right-0 z-50 p-4 text-center text-sm md:text-base font-semibold text-gray-900 bg-yellow-400 backdrop-blur-sm shadow-lg border-b-2 border-yellow-500 transform transition-transform duration-500 ease-in-out">
+        <div class="container mx-auto flex items-center justify-between">
+            <span class="flex-grow lang-text">
+                <span lang="vi">⚠️ Dự án này đã lỗi thời và không còn được cập nhật.</span>
+                <span lang="en">⚠️ This project is outdated and no longer updated.</span>
+                <span lang="ja">⚠️ このプロジェクトは古くなっており、更新されていません。</span>
+                <span lang="fr">⚠️ Ce projet est obsolète et n'est plus mis à jour.</span>
+                <span lang="es">⚠️ Este proyecto está desactualizado y ya no se actualiza.</span>
+                <span lang="ru">⚠️ Этот проект устарел и больше не обновляется.</span>
+            </span>
+            <button id="close-banner" class="text-gray-900 hover:text-gray-700 ml-4 transition-transform duration-200 hover:rotate-90" aria-label="Đóng thông báo">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    </div>
+
     <div class="container mx-auto px-4 py-8 relative z-10">
         
     <!-- Search Bar -->
@@ -43,7 +75,7 @@
         <nav class="flex flex-wrap justify-center gap-4 mb-10">
             <a href="https://gacha.teaserverse.online/" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                    <path d="M5 4a1 1 0 01-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
                 </svg>
                 Gacha Bots
             </a>

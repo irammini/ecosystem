@@ -402,6 +402,18 @@ function setupEventListeners() {
 
     // Search functionality
     setupSearchFunctionality();
+
+    // Thêm event listener cho nút đóng thông báo
+    const closeBannerBtn = document.getElementById('close-banner');
+    const outdatedBanner = document.getElementById('outdated-banner');
+    if (closeBannerBtn && outdatedBanner) {
+        closeBannerBtn.addEventListener('click', () => {
+            outdatedBanner.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                outdatedBanner.style.display = 'none';
+            }, 500); // Đợi hiệu ứng chuyển động hoàn tất
+        });
+    }
 }
 
 function switchTab(tabId) {
@@ -820,7 +832,6 @@ function showBotModal(botId) {
             </div>
         `;
 
-        // Add event listener for toggle button
         document.getElementById('toggle-details')?.addEventListener('click', () => {
             showDetails = !showDetails;
             renderModalContent();
