@@ -1,5 +1,7 @@
 # Teaserverse Ecosystem Dashboard
 
+**QUAN TRỌNG:** Tất cả bot và website này đều đã lỗi thời, sẽ không có cập nhật gì thêm cho đến thời điểm hiện tại. Cảm ơn đã hiểu và hãy khám phá các dự án khác của tôi.
+
 > **Một dashboard tương tác phân tích hệ sinh thái các bot Discord thuộc Teaserverse.**
 
 ## 🧩 Giới thiệu
